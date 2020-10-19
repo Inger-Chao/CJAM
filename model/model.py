@@ -57,7 +57,6 @@ class Model:
 
         self.img_size = img_size
 
-        # self.encoder = SetNet(self.hidden_dim).float()
         self.transformer = build_transformer()
         self.encoder = CJAMNet(self.transformer, 100).float()
         self.encoder = nn.DataParallel(self.encoder)
@@ -186,7 +185,7 @@ class Model:
                 loss.backward()
                 self.optimizer.step()
 
-            if self.restore_iter % 3000 == 0:
+            if self.restore_iter % 4000 == 0:
                 print(datetime.now() - _time1)
                 _time1 = datetime.now()
                 self.save()

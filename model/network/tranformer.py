@@ -16,8 +16,8 @@ from torch import nn, Tensor
 
 class Transformer(nn.Module):
 
-    def __init__(self, d_model=64, nhead=8, num_encoder_layers=2,
-                 num_decoder_layers=2, dim_feedforward=512, dropout=0.1,
+    def __init__(self, d_model=64, nhead=8, num_encoder_layers=1,
+                 num_decoder_layers=1, dim_feedforward=512, dropout=0.1,
                  activation="relu", normalize_before=False,
                  return_intermediate_dec=False):
         super().__init__()
@@ -281,7 +281,7 @@ def build_transformer():
         # num_encoder_layers=args.enc_layers,
         # num_decoder_layers=args.dec_layers,
         # normalize_before=args.pre_norm,
-        # return_intermediate_dec=True,
+        return_intermediate_dec=True,
     )
 
 

@@ -88,7 +88,6 @@ class CJAMNet(nn.Module):
         batch_size = samples.size(0)
         # Returns a new tensor with a dimension of size one inserted at the
         #         specified position.
-        # x = samples.unsqueeze(2)
         x = samples.unsqueeze(2)
         del samples
 
@@ -107,16 +106,15 @@ class CJAMNet(nn.Module):
         x = self.set_layer6(x)
         x = self.frame_max(x)[0]
         # gl = gl + x
-
         # feature = list()
         # batch_size, channels, height, width = gl.size()
         # for num_bin in self.bin_num:
-        #    z = x.view(batch_size, channels, num_bin, -1)
-        #    z = z.mean(3) + z.max(3)[0]
-        #    feature.append(z)
-        #    z = gl.view(batch_size, channels, num_bin, -1)
-        #    z = z.mean(3) + z.max(3)[0]
-        #    feature.append(z)
+        #  z = x.view(batch_size, channels, num_bin, -1)
+        #  z = z.mean(3) + z.max(3)[0]
+        #  feature.append(z)
+        #  z = gl.view(batch_size, channels, num_bin, -1)
+        #  z = z.mean(3) + z.max(3)[0]
+        #  feature.append(z)
         # feature = torch.cat(feature, 2).permute(2, 0, 1).contiguous()
 
 	# feature = feature.matmul(self.fc_bin[0])
