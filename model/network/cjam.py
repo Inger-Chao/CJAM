@@ -7,15 +7,14 @@ import torch.nn as nn
 
 import numpy as np
 
-from .basic_blocks import BasicConv2d, SetBlock
-
+from .basic_blocks import BasicConv2d, SetBlock, Self_Attn
 class CJAMNet(nn.Module):
-    def __init__(self, transformer, num_queries):
+    def __init__(self, hidden_num, num_queries):
         super(CJAMNet, self).__init__()
-
-        self.hidden_num = transformer.d_model
-        self.transformer = transformer
-
+        	
+        # self.hidden_num = transformer.d_model
+        # self.transformer = transformer
+        self.hidden_num = hidden_num
         self.batch_frame = None
 
         _set_in_channels = 1
@@ -35,6 +34,7 @@ class CJAMNet(nn.Module):
         self.gl_layer4 = BasicConv2d(_gl_channels[1], _gl_channels[1], 3, padding=1)
         self.gl_pooling = nn.MaxPool2d(2)
 
+        self.self_attn = Self_Attn(_set_channels[2])
         self.input_proj = nn.Conv2d(_set_channels[2], self.hidden_num, kernel_size=1)
         self.query_embed = nn.Embedding(num_queries, self.hidden_num)
 
@@ -105,24 +105,25 @@ class CJAMNet(nn.Module):
         x = self.set_layer5(x)
         x = self.set_layer6(x)
         x = self.frame_max(x)[0]
-        # gl = gl + x
-        # feature = list()
-        # batch_size, channels, height, width = gl.size()
-        # for num_bin in self.bin_num:
-        #  z = x.view(batch_size, channels, num_bin, -1)
-        #  z = z.mean(3) + z.max(3)[0]
-        #  feature.append(z)
-        #  z = gl.view(batch_size, channels, num_bin, -1)
-        #  z = z.mean(3) + z.max(3)[0]
-        #  feature.append(z)
-        # feature = torch.cat(feature, 2).permute(2, 0, 1).contiguous()
+        attn = self.self_attn(x)[0]
+        gl = attn + x
+        feature = list()
+        batch_size, channels, height, width = gl.size()
+        for num_bin in self.bin_num:
+            z = x.view(batch_size, channels, num_bin, -1)
+            z = z.mean(3) + z.max(3)[0]
+            feature.append(z)
+            z = gl.view(batch_size, channels, num_bin, -1)
+            z = z.mean(3) + z.max(3)[0]
+            feature.append(z)
+        feature = torch.cat(feature, 2).permute(2, 0, 1).contiguous()
 
-	# feature = feature.matmul(self.fc_bin[0])
-        # feature = feature.permute(1, 0, 2).contiguous()
+        # feature = feature.matmul(self.fc_bin[0])
+        feature = feature.permute(1, 0, 2).contiguous()
         # pos = feature
         # src = feature[-1]
         # assert mask is not None
         # hs = self.transformer(self.input_proj(gl), None, self.query_embed.weight, None)[0]
-        hs = self.transformer(self.input_proj(x), None, self.query_embed.weight, None)[0]
+        # hs = self.transformer(self.input_proj(x), None, self.query_embed.weight, None)[0]
         # print(hs.size())
-        return hs, None
+        return feature, None

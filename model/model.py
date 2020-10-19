@@ -57,8 +57,9 @@ class Model:
 
         self.img_size = img_size
 
-        self.transformer = build_transformer()
-        self.encoder = CJAMNet(self.transformer, 100).float()
+        # self.transformer = build_transformer()
+        # self.encoder = CJAMNet(self.transformer, 100).float()
+        self.encoder = CJAMNet(self.hidden_dim, 100).float()
         self.encoder = nn.DataParallel(self.encoder)
         self.triplet_loss = TripletLoss(self.P * self.M, self.hard_or_full_trip, self.margin).float()
         self.triplet_loss = nn.DataParallel(self.triplet_loss)
@@ -166,7 +167,7 @@ class Model:
 
             target_label = [train_label_set.index(l) for l in label]
             target_label = self.np2var(np.array(target_label)).long()
-            feature = feature.view(128, 256, -1)
+            # feature = feature.view(128, 256, -1)
             triplet_feature = feature.permute(1, 0, 2).contiguous()
             triplet_label = target_label.unsqueeze(0).repeat(triplet_feature.size(0), 1)
             (full_loss_metric, hard_loss_metric, mean_dist, full_loss_num
@@ -185,7 +186,7 @@ class Model:
                 loss.backward()
                 self.optimizer.step()
 
-            if self.restore_iter % 4000 == 0:
+            if self.restore_iter % 1000 == 0:
                 print(datetime.now() - _time1)
                 _time1 = datetime.now()
                 self.save()
@@ -251,7 +252,8 @@ class Model:
 
             feature, _ = self.encoder(*seq, batch_frame)
             # print(feature.size())
-            n, num_bin, _, __ = feature.size()
+            # n, num_bin, _, __ = feature.size()
+            n, num_bin, _ = feature.size()
             feature_list.append(feature.view(n, -1).data.cpu().numpy())
             view_list += view
             seq_type_list += seq_type
