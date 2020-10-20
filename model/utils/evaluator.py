@@ -2,13 +2,12 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 
-device = ('cuda' if torch.cuda.is_available() else 'cpu')
 
 def cuda_dist(x, y):
-    # x = torch.from_numpy(x).cuda()
-    # y = torch.from_numpy(y).cuda()
-    x = torch.from_numpy(x).to(device)
-    y = torch.from_numpy(y).to(device)
+    x = torch.from_numpy(x).cuda()
+    y = torch.from_numpy(y).cuda()
+    # x = torch.from_numpy(x).to(device)
+    # y = torch.from_numpy(y).to(device)
     dist = torch.sum(x ** 2, 1).unsqueeze(1) + torch.sum(y ** 2, 1).unsqueeze(
         1).transpose(0, 1) - 2 * torch.matmul(x, y.transpose(0, 1))
     dist = torch.sqrt(F.relu(dist))

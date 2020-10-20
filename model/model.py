@@ -186,12 +186,12 @@ class Model:
                 loss.backward()
                 self.optimizer.step()
 
-            if self.restore_iter % 1000 == 0:
+            if self.restore_iter % 2000 == 0:
                 print(datetime.now() - _time1)
                 _time1 = datetime.now()
                 self.save()
 
-            if self.restore_iter % 200 == 0:
+            if self.restore_iter == 1 or self.restore_iter % 200 == 0:
                 print('iter {}:'.format(self.restore_iter), end='')
                 print(', hard_loss_metric={0:.8f}'.format(np.mean(self.hard_loss_metric)), end='')
                 print(', full_loss_metric={0:.8f}'.format(np.mean(self.full_loss_metric)), end='')

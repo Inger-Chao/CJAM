@@ -50,10 +50,14 @@ print('Evaluation complete. Cost:', datetime.now() - time)
 # NM: 95.405,     BG: 88.284,     CL: 72.041
 for i in range(1):
     print('===Rank-%d (Include identical-view cases)===' % (i + 1))
-    print('NM: %.3f,\tBG: %.3f,\tCL: %.3f' % (
-        np.mean(acc[0, :, :, i]),
-        np.mean(acc[1, :, :, i]),
-        np.mean(acc[2, :, :, i])))
+    # print('NM: %.3f,\tBG: %.3f,\tCL: %.3f' % (
+    #     np.mean(acc[0, :, :, i]),
+    #     np.mean(acc[1, :, :, i]),
+    #     np.mean(acc[2, :, :, i])))
+    # 取第 0 维的数据
+    print('NM:', acc[0, :, :, i], True)
+    print('BG:', acc[1, :, :, i], True)
+    print('CL:', acc[2, :, :, i], True)
 
 # Print rank-1 accuracy of the best model，excluding identical-view cases
 # e.g.

@@ -13,15 +13,15 @@ conf = {
         'pid_shuffle': False,
     },
     "model": {
-        'hidden_dim': 128,
+        'hidden_dim': 256,
         'lr': 1e-4,
         'hard_or_full_trip': 'full',
         'batch_size': (8, 16),
         'restore_iter': 0,
-        'total_iter': 400000,
+        'total_iter': 80000,
         'margin': 0.2,
         'num_workers': 0,
         'frame_num': 30,
-        'model_name': 'CJAM',
+        'model_name': 'self_attn',
     },
 }
