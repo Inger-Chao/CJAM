@@ -1,2 +1,2 @@
 # gait-recognition-demo
-A gait recognition model trained by CASIA-A with CNN joint attention
+A gait recognition model trained for CASIA-A and CASIA-B with CNN joint self or multihead attention
